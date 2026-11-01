@@ -1,36 +1,32 @@
-# SIH 2026 — Landslide Early Warning System
+# React + TypeScript + Vite
 
-AI-driven dynamic landslide risk monitoring and early-warning system for Northeast India.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Objective
+Currently, two official plugins are available:
 
-Develop a scientifically credible system that combines:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-- Landslide susceptibility
-- Near-real-time rainfall
-- Weather forecast conditions
-- Terrain and environmental factors
-- Historical landslide information
-- Infrastructure exposure
-- Explainable AI
-- Dynamic risk scoring
-- Early-warning generation
+## React Compiler
 
-## Status
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-Research and architecture phase.
+## Expanding the Oxlint configuration
 
-## Problem Statement
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
 
-SIH 2026 — AI-Based Early Warning and Landslide Risk Monitoring.
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
+```
 
-## Development Philosophy
-
-The system will prioritize:
-
-- Scientific validity
-- Accurate data
-- Spatial and temporal validation
-- Explainable predictions
-- Reproducibility
-- Real-world deployment feasibility
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
