@@ -1,32 +1,49 @@
-# React + TypeScript + Vite
+# SIH 2026 — Landslide Early Warning System
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+AI-driven landslide risk monitoring and early warning for Northeast India, combining terrain susceptibility, rainfall, weather forecasts, historical events, and infrastructure exposure.
 
-Currently, two official plugins are available:
+## Project layout
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `backend/` — FastAPI service, state-specific prediction services, model/data artifacts, processing scripts, and Python tests.
+- `frontend/` — React, TypeScript, and Vite application.
+- `docs/` — project audit and East Sikkim reproduction notes.
 
-## React Compiler
+## Current status
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This is a research prototype, not a fully provisioned production deployment. Model and training artifacts are included, but the terrain rasters listed in `backend/pilot_manifest.json` (24 artifacts, about 3.45 GB) are not in this checkout. Without those rasters, prediction endpoints that require terrain return `DATA_UNAVAILABLE`; this was verified locally. Configure `SIH_PILOT_ARTIFACT_BASE_URL` to enable the optional artifact download path, or prepare the required terrain data before expecting live predictions.
 
-## Expanding the Oxlint configuration
+## Run locally
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Backend
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+From `backend/`, create and activate a virtual environment, install dependencies, and start the API:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Run the backend tests with `python -m pytest -q tests`. On Windows, tests that require filesystem symlinks need symlink privileges (for example, Windows Developer Mode).
+
+### Frontend
+
+From `frontend/`:
+
+```powershell
+npm ci
+npm run dev
+npm test
+npm run build
+npm run lint
+```
+
+The frontend tests use Node's built-in test runner and TypeScript stripping.
+
+## Development priorities
+
+- Scientific validity and accurate data
+- Spatial and temporal validation
+- Explainable predictions and honest unavailable-data responses
+- Reproducibility and real-world deployment feasibility

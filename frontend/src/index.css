@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@layer base {
+  :root {
+    --bg-dark: #0a0d12;
+    --bg-surface: #111620;
+    --bg-panel: #161c27;
+    --bg-border: #232b3a;
+
+    --color-low: #10b981;      /* Muted emerald green */
+    --color-medium: #f59e0b;   /* Warning amber */
+    --color-high: #f97316;     /* High hazard orange */
+    --color-extreme: #ef4444;  /* Emergency red */
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: #e2e8f0;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom leaflet terrain map styling */
+.leaflet-container {
+  background-color: #0b0f17 !important;
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: #161c27 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #2e384d !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-tip {
+  background-color: #161c27 !important;
+}
+
+/*
+ * Basemap theme treatment (Dark / Light toggle).
+ *
+ * Both themes draw the SAME key-free OpenStreetMap tiles; Dark Mode is a filter
+ * applied to the tile layer's own container. Because Leaflet keeps overlays in
+ * separate panes, the filter reaches the basemap only — AOI rectangles, risk
+ * cells, markers, labels, tooltips, popups and controls render identically in
+ * both modes. The transition makes the swap a cross-fade rather than a flash.
+ */
+.brk-basemap {
+  transition: filter 320ms ease-in-out;
+  will-change: filter;
+}
+
+.brk-basemap--dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.86) contrast(0.92) saturate(0.62);
+}
+
+.brk-basemap--light {
+  filter: none;
+}
+
+/* Light basemap: keep the container backdrop from flashing near-black on pan. */
+.leaflet-container:has(.brk-basemap--light) {
+  background-color: #e8eaed !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brk-basemap {
+    transition: none;
+  }
+}
+
+/* Topographic Contour Background effect */
+.topo-contour-bg {
+  background-image: radial-gradient(circle at 50% 50%, rgba(20, 30, 45, 0.5) 0%, rgba(10, 13, 18, 0.95) 100%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 1px, transparent 2px, transparent 40px);
+}
+
+/* Pulse indicator for live monitoring */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Signature: contour-line draw for the brand mark on the welcome hero */
+.brk-draw path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: brk-contour-draw 1.8s ease forwards;
+}
+.brk-draw path:nth-child(2) {
+  animation-delay: 0.35s;
+}
+@keyframes brk-contour-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Slow drifting scan sweep for the hero topography */
+@keyframes brk-scan {
+  0% { transform: translateY(-10%); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.7; }
+  100% { transform: translateY(110%); opacity: 0; }
+}
+.brk-scan-line {
+  animation: brk-scan 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Staggered fade-rise for hero content on load */
+@keyframes brk-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.brk-rise {
+  opacity: 0;
+  animation: brk-rise 0.7s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brk-draw path,
+  .brk-scan-line,
+  .brk-rise,
+  .animate-pulse-ring {
+    animation: none;
+  }
+  .brk-draw path {
+    stroke-dashoffset: 0;
+  }
+  .brk-rise {
+    opacity: 1;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0e1219;
+}
+::-webkit-scrollbar-thumb {
+  background: #242c3d;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #37435c;
+}

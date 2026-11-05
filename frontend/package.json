@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "test": "node --experimental-strip-types --import ./src/__tests__/tsResolve.mjs --test ./src/__tests__/liveRainfall.test.ts ./src/__tests__/mapTheme.test.ts ./src/__tests__/pilotMap.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {

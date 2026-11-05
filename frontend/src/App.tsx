@@ -1,0 +1,44 @@
+import { useEffect, useState } from 'react';
+import { WelcomePage } from './pages/WelcomePage';
+import { NERDashboard } from './pages/NERDashboard';
+import { SikkimDashboard } from './pages/SikkimDashboard';
+import { AssamDashboard } from './pages/AssamDashboard';
+import { ArunachalDashboard } from './pages/ArunachalDashboard';
+import { MeghalayaDashboard } from './pages/MeghalayaDashboard';
+
+export type ActivePage = 'welcome' | 'ner' | 'sikkim' | 'assam' | 'arunachal' | 'meghalaya';
+
+export function App() {
+  const [page, setPage] = useState<ActivePage>('welcome');
+
+  // Reset scroll position on navigation so each view opens at the top.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
+
+  return (
+    <div className="min-h-screen w-full bg-[#0a0d12] text-slate-100">
+      {page === 'welcome' && (
+        <WelcomePage
+          onEnterConsole={() => setPage('ner')}
+          onOpenSikkim={() => setPage('sikkim')}
+        />
+      )}
+      {page === 'ner' && (
+        <NERDashboard
+          onBack={() => setPage('welcome')}
+          onOpenSikkim={() => setPage('sikkim')}
+          onOpenAssam={() => setPage('assam')}
+          onOpenArunachal={() => setPage('arunachal')}
+          onOpenMeghalaya={() => setPage('meghalaya')}
+        />
+      )}
+      {page === 'sikkim' && <SikkimDashboard onBack={() => setPage('ner')} />}
+      {page === 'assam' && <AssamDashboard onBack={() => setPage('ner')} />}
+      {page === 'arunachal' && <ArunachalDashboard onBack={() => setPage('ner')} />}
+      {page === 'meghalaya' && <MeghalayaDashboard onBack={() => setPage('ner')} />}
+    </div>
+  );
+}
+
+export default App;
